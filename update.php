@@ -31,13 +31,13 @@
 
         <label for="">school</label>
             <select id="" name="school">
-                <option value="">select</option>
+                <option value="" >select</option>
                 <?php
         include 'connection.php';
         // Fetch schools data from the database
         $query_select_schools = mysqli_query($connect, "SELECT * FROM schools");
         while($school = mysqli_fetch_array($query_select_schools)) {
-            echo "<option value='" . $school['schoolId'] . "'>" . $school['schoolname'] . "</option>";
+            echo "<option value='". $school['schoolId']."'>" . $school['schoolname'] . "</option>";
         }
         ?>
             </select><br>
@@ -68,7 +68,7 @@ if(isset($_POST['submit'])) {
     $result = mysqli_query($connect, $query);
 
     if($result) {
-        header("location:formin.php");
+        header("location: formin.php");
     } else {
         echo "Error updating employee information: " ;
     }
