@@ -10,6 +10,7 @@
     width: 50%;
     margin: 0 auto;
     padding: 20px;
+    background:whitesmoke;
 }
 
 h2 {

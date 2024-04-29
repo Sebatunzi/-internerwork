@@ -6,8 +6,8 @@
 }
 body{
     min-height: 92vh;
-    background: url(bg1.jpeg) center / cover;
     backdrop-filter: blur(6px);
+    background: whitesmoke;
     display: flex;
     justify-content: center ;
     align-items: center;

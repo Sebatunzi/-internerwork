@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
-    <style>
+    <title>Document</title>
+</head>
+<body>
+<style>
         * {
     margin: 0;
     padding: 0;
@@ -103,15 +105,12 @@ table th {
 table {
             width: 100%;
             border-collapse: collapse;
-            
-
-        }
+                    }
 
         th, td {
             padding: 8px;
             border-bottom: 1px solid #ddd;
             text-align: left;
-        
         }
 
         th {
@@ -119,7 +118,7 @@ table {
         }
 
         tr:nth-child(even) {
-            background-color: #f2f2f2;
+            background-color: #fff;
         }
 
         .btn {
@@ -148,6 +147,10 @@ table {
             background-color: #f44336;
             color: white;
         }
+        .tb{
+            background:white;
+            padding:30px;
+        }
     </style>
 </head>
 <body>
@@ -155,9 +158,9 @@ table {
         <nav class="sidebar">
             <h2>ADMIN</h2>
             <ul>
-                <li><a href="#">Users</a></li>
+                <li><a href="attendance.php">Users</a></li>
                 <li><a href="#">Trades</a></li>
-                <li><a href="request.php">Requests</a></li>
+                <li><a href="#">Requests</a></li>
             </ul>
             <a href="login_rg.php">Logout</a>
         </nav>
@@ -169,44 +172,67 @@ table {
                     <a href="login_rg.php">Logout</a>
                 </div>
             </header>
-            <div class="table-container">
-                <h2>Students</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Student No</th>
-                            <th>Name</th>
-                            <th>User Type</th>
-                            <th>Trade</th>
-                            <th>Options</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                          
-                            include 'conn.php';
+    <div class="tb">
+        <h1>Internship Requests</h1>
+                
+    <table>
+        <tr>
+            <th>Email</th>
+            <th>Trade</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+        <?php
 
-                            $query_select = mysqli_query($connect, "SELECT users.*, trade.name FROM users INNER JOIN trade ON users.tradeId = trade.id");
+        include 'conn.php';
 
-                            while ($trainees = mysqli_fetch_array($query_select)) {
-                                echo "<tr>";
-                                echo "<td>" . $trainees['id'] . "</td>";
-                                echo "<td>" . $trainees['username'] . "</td>";
-                                echo "<td>" . $trainees['user_type'] . "</td>";
-                                echo "<td>" . $trainees['name'] . "</td>";
-                                echo "<td>";
-                                echo "<a href='delete.php?id=" . $trainees['id'] . "'>Delete</a>";
-                                echo "<a href='update.php?id=" . $trainees['id'] . "'>Update</a>";
-                                echo "</td>";
-                                echo "</tr>";
-                            }
-                        ?>
-                    </tbody>
-                </table>
-            </div>
-        </section>
+        $query = "SELECT * FROM internship_requests_new";
+        $result = mysqli_query($connect, $query);
+
+        if (mysqli_num_rows($result) > 0) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                echo "<tr>";
+                echo "<td>" . $row["email"] . "</td>";
+                echo "<td>" . $row["trade"] . "</td>";
+                echo "<td>" . $row["description"] . "</td>";
+                echo "<td>" . $row["status"] . "</td>";
+                echo "<td>";
+                if ($row["status"] == 'pending') {
+                    echo "<button class='btn btn-accept' onclick='acceptRequest(" . $row['id'] . ")' type='submit'>Accept</button>";
+                    echo "<button class='btn btn-reject' onclick='rejectRequest(" . $row['id'] . ")' type='submit'>Reject</button>";
+                }
+                echo "</td>";
+                echo "</tr>";
+            }
+        } else {
+            echo "<tr><td colspan='5'>No internship requests found</td></tr>";
+        }
+        ?>
+    </table></div>
     </div>
-    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
+<script>
+    function acceptRequest(id) {
+        $.post('update_status.php', { id: id, status: 'approved' }, function(data) {
+            if (data === 'success') {
+                window.location.href = 'attendance.php';
+            } else {
+                    echo"error";
+            }
+        });
+    }
+
+    function rejectRequest(id) {
+        $.post('update_status.php', { id: id, status: 'rejected' }, function(data) {
+            if (data === 'success') {
+                window.location.href = 'attendance.php';
+            } else {
+                echo"error";
+            }
+        });
+    }
+</script>
 </body>
 </html>

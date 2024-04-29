@@ -69,11 +69,7 @@ textarea {
 <body>
     <div class="container">
         <h1>Internship Application Form</h1>
-        <form action="submit.php" method="POST">
-            <div class="form-group">
-                <label for="name">Full Name:</label>
-                <input type="text" id="name" name="name" required>
-            </div>
+        <form action="" method="POST">
             <div class="form-group">
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" required>
@@ -93,15 +89,34 @@ textarea {
             ?>
         </select></div>
             <div class="form-group">
-                <label for="resume">Resume:</label>
-                <input type="file" id="resume" name="resume" required>
-            </div>
-            <div class="form-group">
                 <label for="message">Additional Message:</label>
                 <textarea id="message" name="message" rows="4"></textarea>
             </div>
             <button type="submit" class="btn">Submit</button>
         </form>
     </div>
+    <?php
+// Include database connection
+include 'conn.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Retrieve form data
+    $email = $_POST["email"];
+    $trade = $_POST["trade"];
+    $message = $_POST["message"];
+
+    // Insert data into database
+    $query = "INSERT INTO internship_requests_new (email, trade, description) VALUES ('$email', '$trade', '$message')";
+    $result = mysqli_query($connect, $query);
+
+    if ($result) {
+        echo "Internship request submitted successfully!";
+        header('location: student_dashboard.php');
+    } else {
+        echo "Error: " . mysqli_error($connect);
+    }
+}
+?>
+
 </body>
 </html>
